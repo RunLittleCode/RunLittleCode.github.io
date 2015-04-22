@@ -81,20 +81,62 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/22/Hexo博客开始/" title="Hexo博客开始" itemprop="url">Hexo博客开始</a>
+      <a href="/2015/04/22/初探Hexo/" title="解决Github Pages显示404" itemprop="url">解决Github Pages显示404</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Liu" target="_blank" itemprop="author">Liu</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-22T02:36:55.000Z" itemprop="datePublished"> 發表於 2015-04-22</time>
+    <time datetime="2015-04-22T08:22:20.000Z" itemprop="datePublished"> 發表於 2015-04-22</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        
+        <p>最近在某乎上查了下技术blog用Hexo弄比较方便，就自己弄下。我没有用域名，就先用Github Pages凑合着用。至于具体到步骤，已经有很多大神写了，请看参考文献，我就不再造轮子了。</p>
+<p>经过一番配置，用Hexo在本地正常显示了，但是在浏览器打开<code>http://runlittlecode.github.io</code>还是显示404.看提示应该是在主目录缺少index.html文件，但是按大神说的步骤，运行</p>
+<pre><code><span class="variable">$hexo</span> deploy
+</code></pre><p>以后，应该就完事了。但运行完命令后，什么事情都没发生。github上面的项目还是没有index.html文件。看来问题就在这里了。</p>
+<p>然后在网上各种找，发现都是点到为止，木有收获呀。最后还是翻官方文档吧，翻到<a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">deploy</a>的时候，恍然大悟。</p>
+<pre><code>Before we start, you have <span class="keyword">to</span> modify settings <span class="keyword">in</span> _config.yml. A valid deployment setting must come <span class="keyword">with</span> <span class="class"><span class="keyword">type</span> <span class="title">field</span>. <span class="title">For</span> <span class="title">example</span>:</span>
+
+deploy:
+  <span class="class"><span class="keyword">type</span>: <span class="title">git</span></span>
+ You can <span class="keyword">use</span> multiple deployers. Hexo will execute each deployer <span class="keyword">in</span> sequence.        
+deployer:    
+- <span class="class"><span class="keyword">type</span>: <span class="title">git</span>    </span>
+  repo:    
+- <span class="class"><span class="keyword">type</span>: <span class="title">heroku</span>    </span>
+  repo  
+</code></pre><p>原来在deploy之前，需要在根目录的_config.yml文件中先设置发布的参数,也就是Deployment部分的参数(默认type是空的，所以我先前运行这个命令什么事情都没发生-.-||)。我是在Git上发布，所以按Git发布的流程来。</p>
+<p>先安装hexo-deployer-git</p>
+<pre><code>$ npm <span class="operator"><span class="keyword">install</span> hexo-deployer-git <span class="comment">--save</span></span>
+</code></pre><p>再编辑_config.yml的内容</p>
+<pre><code><span class="attribute">deploy</span>:
+  <span class="attribute">type</span>: git
+  <span class="attribute">repo</span>: git<span class="variable">@github</span>.<span class="attribute">com</span>:RunLittleCode/RunLittleCode.github.io.git
+  <span class="attribute">branch</span>: master
+</code></pre><p>配置完后，再运行发布的命令。这下有反应了，看了打印的log</p>
+<pre><code>$ hexo d
+INFO  Deploying: git
+INFO  Clearing <span class="class">.deploy</span> folder...
+INFO  Copying files from public folder...
+On branch master
+nothing to commit, working directory clean
+To git@github<span class="class">.com</span>:RunLittleCode/RunLittleCode<span class="class">.github</span><span class="class">.io</span><span class="class">.git</span>
+   c72f81b.<span class="class">.ea7e6e7</span>  master -&gt; master
+Branch master set up to track remote branch master from git@github<span class="class">.com</span>:RunLittleCode/RunLittleCode<span class="class">.github</span><span class="class">.io</span><span class="class">.git</span>.
+INFO  Deploy done: git
+</code></pre><p>好吧，原来是将public里面生成的静态文件上传到主目录了，这下主目录有index.html文件了。现在去打开<code>http://runlittlecode.github.io</code>,哦了,显示正常。</p>
+<p>注意：在发布之前确认mac可以连到github,需要提前配置下ssh密钥,不然发布会有问题，具体怎么配，请看参考文献。</p>
+<h3 id="参考文献">参考文献</h3><ol>
+<li><p><a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">hexo你的博客</a></p>
+</li>
+<li><p><a href="http://blog.jamespan.me/2014/07/20/使用Hexo在Github-Pages搭建博客/" target="_blank" rel="external">使用Hexo在Github Pages搭建博客</a></p>
+</li>
+</ol>
+
         
         
         <p class="article-more-link">
@@ -105,63 +147,10 @@
 <div class="article-catetags">
 
 
-</div>
-
-
-
-
-<div class="comments-count">
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/22/hello-world/" title="Hello World" itemprop="url">Hello World</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Liu" target="_blank" itemprop="author">Liu</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-22T02:32:45.000Z" itemprop="datePublished"> 發表於 2015-04-22</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Hexo/">Hexo</a>
+  </div>
 
 </div>
 
@@ -193,6 +182,17 @@
   
 
   
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Hexo/" title="Hexo">Hexo<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
 
   <div class="linkslist">
   <p class="asidetitle">友情鏈接</p>
